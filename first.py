@@ -13,6 +13,43 @@ import cassiopeia as cass
 from cassiopeia import Summoner, MatchHistory, Match
 
 
+from fastapi import FastAPI
+
+
+import requests
+
+
+app = FastAPI()
+
+
+
+@app.post("/discord-webhook")
+async def handle_discord_webhook(payload: dict):
+    # Process payload (e.g., extract relevant data)
+    # Send data to your Discord bot application
+    return {"message": "Data received and sent to Discord bot"}
+
+
+
+
+client = discord.Client()
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('$hello'):
+        await message.channel.send('Hello!')
+
+
+
+
+payload = {"user_id": message.author.id, "message_content": message.content}
+
+response = requests.post("http://localhost:8000/discord-webhook", json=payload)
+
+print(response.json())
+
 
 api = 'RGAPI-d5f0cdd8-82d0-4114-89cc-e42cfbe7dbbd'
 
